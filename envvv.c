@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envvv.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/13 11:42:19 by tabadawi          #+#    #+#             */
+/*   Updated: 2024/04/13 22:07:02 by tabadawi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/wait.h>
 
 typedef struct s_split
 {
@@ -138,7 +151,7 @@ char	**ft_split(char const *s, char c)
 	return (var.split);
 }
 
-char	*ft_strjoin(char *input, char *argv)
+char	*ft_strjoin(char *input, char *argv, int flag)
 {
 	int		i;
 	int		j;
@@ -157,7 +170,7 @@ char	*ft_strjoin(char *input, char *argv)
 	while (argv[i] && argv[i] != '\n')
 		str[j++] = argv[i++];
 	str[j] = '\0';
-	if (input)
+	if (flag == 1)
 		free (input);
 	return (str);
 }
@@ -168,6 +181,7 @@ int main(int ac, char **av, char **env)
 	char *placeholder;
 	char **path;
 	char *cmd_path;
+	char *arg[] = {"ls", "-huya", NULL};
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH", 4) == 0)
@@ -175,14 +189,29 @@ int main(int ac, char **av, char **env)
 		i++;
 	}
 	if (placeholder)
-		path = ft_split(placeholder, ':');
+		(path = ft_split(placeholder, ':'), free (placeholder));
 	i = 0;
+	// int id = fork();
+	// if (id == 0)
+	// {
 	while (path[i])
 	{
-		cmd_path = ft_strjoin(path[i], "/cat");
-		// printf("%s\n", cmd_path);
+		cmd_path = ft_strjoin(path[i], "/ls", 0);
+		// printf("hello\n");
 		if (access(cmd_path, F_OK) == 0)
-			printf("command found!!!\n");
+			break ;
+		free (cmd_path);
 		i++;
 	}
+	if (execve(cmd_path, arg, env) == -1)
+		(write (2, "command not found\n", 18), exit (1));
+	// free (path);
+	// }
+	// else{
+	// wait(NULL);
+	i = -1;
+	while (path[++i])
+		free (path[i]);
+	free (path);
 }
+// }

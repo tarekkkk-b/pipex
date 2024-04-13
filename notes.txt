@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   notes                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/09 14:36:05 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/13 10:45:48 by tabadawi         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    notes.txt                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/04/09 14:36:05 by tabadawi          #+#    #+#              #
+#    Updated: 2024/04/13 22:08:35 by tabadawi         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 *so to be clear from the start, im making my pipex in general whee it would handle more
  than one pipe (bonus), so i can use as is in minishell, and also understand better.
@@ -56,4 +56,20 @@
  in order for us to be able to actually use it, we are gonna loop thru the env till we find the path var and
  save it in a string, then split it up with : as that means diff directories, then loop thru that and check if
  access can return to us 0 as in the binary exists, and if so, run execve
+ 
+*ok lots of experimenting today, i officially tried to execute a command and these are all the things ive learned
+ -first of all we do have the path in the env, find it and store it in a 2d array
+ -then we will have to make sure that we strjoin it with the path making sure there is a "/"
+ -access will check for us if that executable is stored somewhere or not
+ -if it is, we run execve which takes three things
+		-the cmd path
+		-a set of args, that being the command, its flags, and its params if any
+		-the environment
+ -now cool thing ab execve is basically once its executed it terminates the current process, whilst also
+  doing a cleanup from within,m but it gets very confusing for when u have forks and diff processes
+ -now in child process the memory is copied, and it has to be freed, or at least thats what i got, although
+  chatgpt didnt exactly say that, thats what i concluded from testing, if execve is there, it cleans up on its own,
+  else we have to manually do that
+ -but for reference rn i need to find a way for when parsing to group the sections correctly for cmd and its flags
+ -if im running one command i dont rlly need to fork but if i have multiple cmds and pipes, i need diff processes
  
