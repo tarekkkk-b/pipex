@@ -1,14 +1,14 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    notes                                              :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/09 14:36:05 by tabadawi          #+#    #+#              #
-#    Updated: 2024/04/09 15:41:13 by tabadawi         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   notes                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/09 14:36:05 by tabadawi          #+#    #+#             */
+/*   Updated: 2024/04/13 10:45:48 by tabadawi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 *so to be clear from the start, im making my pipex in general whee it would handle more
  than one pipe (bonus), so i can use as is in minishell, and also understand better.
@@ -22,7 +22,8 @@
  that pipe, so techmically we can open the same pipe again later on, and again, a pipe is
  techincally a file at this point, his explains what emran was saying earlier
 
-*apparanty, as a "rule", read is always "0", and "write" is always "1", will check later (Dup and Dup2 function is important here)
+*apparanty, as a "rule", read is always "0", and "write" is always "1", will check later
+ (dup and dup2 function is important here ~ chris)
 
 *the executables for the commands are stored all over the device, so we use execve to do them,
  but how do we get to them? we need to go to the path and fetch for them, so as far as im concerned,
@@ -32,8 +33,8 @@
 *we are always starting with an infile and ending with an outfile
 
 *i need to look more into the functions that i have available to my use, those particularyly being
- (according to salam)"access", "dup2", "execve", "fork", "waitpid", (understand Dup, you dont need to use it)but ill look into all in general,
- and obv env vars
+ (according to salam)"access", "dup2", "execve", "fork", "waitpid", (understand dup, you dont need to use it ~ chris)
+ but ill look into all in general, and obv env vars
 
 *with the mention of forks now that also means i have to understand what child and parent processes
  are and how they work together and how they get terminated
@@ -50,4 +51,9 @@
  -if 2 args is all we had, we close our second pipe placed after cmd2 and write to outfile
  -else use the second pipe file to repeat the process and keep swapping between pipe 1 and 2 as needed
  
-*but now what am i parsing for? we will see post research
+*the env is passed as a double pointer (as essentially its an array of strings that contains
+ the environment veriables passed) in the int main and then to navigate thru it we can loop thru it,
+ in order for us to be able to actually use it, we are gonna loop thru the env till we find the path var and
+ save it in a string, then split it up with : as that means diff directories, then loop thru that and check if
+ access can return to us 0 as in the binary exists, and if so, run execve
+ 
