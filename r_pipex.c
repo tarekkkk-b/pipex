@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envvv.c                                            :+:      :+:    :+:   */
+/*   r_pipex.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/13 11:42:19 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/15 22:16:27 by tabadawi         ###   ########.fr       */
+/*   Created: 2024/04/15 17:36:52 by tabadawi          #+#    #+#             */
+/*   Updated: 2024/04/15 21:01:44 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <sys/wait.h>
+
+typedef struct s_data
+{
+	int		cmd_count;
+	int		fd[2];
+	char	***cmds;
+	char 	**path;
+	char	**j_cmds;
+}	t_data;
 
 typedef struct s_split
 {
@@ -21,26 +30,6 @@ typedef struct s_split
 	char	**split;
 	int		wordcount;
 }	t_split;
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	unsigned char	*str1;
-	unsigned char	*str2;
-	size_t			i;
-
-	str1 = (unsigned char *)s1;
-	str2 = (unsigned char *)s2;
-	i = 0;
-	while ((str1[i] != '\0' || str2[i] != '\0') && i < n)
-	{
-		if (str1[i] > str2[i])
-			return (1);
-		else if (str1[i] < str2[i])
-			return (-1);
-		i++;
-	}
-	return (0);
-}
 
 size_t	ft_strlen(const char *str)
 {
@@ -54,22 +43,28 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strjoin(char *input, char *argv, int flag)
 {
 	int		i;
-	char	*s2;
+	int		j;
+	char	*str;
 
 	i = 0;
-	s2 = (char *)malloc((ft_strlen(s1) * sizeof(char)) + 1);
-	if (!s2)
+	j = 0;
+	if (!argv || !(*argv))
 		return (NULL);
-	while (s1[i] != '\0')
-	{
-		s2[i] = s1[i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
+	str = malloc(sizeof(char) * (ft_strlen(input) + ft_strlen(argv) + 2));
+	if (!str)
+		return (NULL);
+	while (input && input[i])
+		str[j++] = input[i++];
+	i = 0;
+	while (argv[i] && argv[i] != '\n')
+		str[j++] = argv[i++];
+	str[j] = '\0';
+	if (flag == 1)
+		free (input);
+	return (str);
 }
 
 char	**freeer(char **split, int i)
@@ -151,70 +146,36 @@ char	**ft_split(char const *s, char c)
 	return (var.split);
 }
 
-char	*ft_strjoin(char *input, char *argv, int flag)
+void	prep_inp(char *str, int ind, t_data *data)
 {
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	j = 0;
-	if (!argv || !(*argv))
-		return (NULL);
-	str = malloc(sizeof(char) * (ft_strlen(input) + ft_strlen(argv) + 2));
-	if (!str)
-		return (NULL);
-	while (input && input[i])
-		str[j++] = input[i++];
-	i = 0;
-	while (argv[i] && argv[i] != '\n')
-		str[j++] = argv[i++];
-	str[j] = '\0';
-	if (flag == 1)
-		free (input);
-	return (str);
+	data->cmds[ind] = ft_split(str, ' ');
+	data->j_cmds[ind] = ft_strjoin(data->cmds[ind][0], "/", 0);
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
-	int i = 0;
-	char *placeholder;
-	char **path;
-	char *cmd_path;
-	char *arg[] = {"ls", "-l", "-a", NULL};
-	while (env[i])
+	int	i;
+	t_data data;
+
+	i = 0;
+	data.cmd_count = ac - 3;
+	data.j_cmds = malloc(sizeof(char *) * ac - 1);
+	data.cmds = malloc(sizeof(char **) * (ac - 1));
+	while (++i < ac - 1)
+		prep_inp(av[i], i - 1, &data);
+	i = 0;
+	int j = 1;
+	int t = 0;
+	while (data.cmds[j])
 	{
-		if (ft_strncmp(env[i], "PATH", 4) == 0)
-			placeholder = ft_strdup(env[i]);
-		i++;
-	}
-	if (placeholder)
-		(path = ft_split(placeholder, ':'), free (placeholder));
-	i = -1;
-	// while (path[++i])
-	// 	printf("%s\n\n\n\n\n", path[i]);
-	int id = fork();
-	if (id == 0)
-	{
-		while (path[++i])
+		t = 0;
+		printf("command: ");
+		while (data.cmds[j][t])
 		{
-			cmd_path = ft_strjoin(path[i], "/ls", 1);
-			if (access(cmd_path, X_OK) == 0)
-				break ;
-			free (cmd_path);
+			printf ("%s ", data.cmds[j][t]);
+			t++;
 		}
-		if (execve(cmd_path, arg, env) == -1)
-		{
-			while (path[i])
-				free (path[i++]);
-			(free (path), write (2, "command not found\n", 18), exit (1));
-		}
-	}
-	else{
-		wait(NULL);
-		i = -1;
-		while (path[++i])
-			free (path[i]);
-		free (path);
+		printf("\n\n");
+		j++;
 	}
 }
