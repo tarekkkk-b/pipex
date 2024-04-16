@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 11:42:19 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/15 22:16:27 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/16 18:21:04 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ int main(int ac, char **av, char **env)
 	char *placeholder;
 	char **path;
 	char *cmd_path;
-	char *arg[] = {"ls", "-l", "-a", NULL};
+	char *arg[] = {"ls", "-l8", "-a", NULL};
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH", 4) == 0)

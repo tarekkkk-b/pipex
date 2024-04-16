@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 17:36:52 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/15 21:01:44 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/16 19:46:58 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ typedef struct s_data
 	char	***cmds;
 	char 	**path;
 	char	**j_cmds;
+	char	*cmd_path;
+	pid_t	child;
 }	t_data;
 
 typedef struct s_split
@@ -65,6 +67,44 @@ char	*ft_strjoin(char *input, char *argv, int flag)
 	if (flag == 1)
 		free (input);
 	return (str);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	unsigned char	*str1;
+	unsigned char	*str2;
+	size_t			i;
+
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
+	i = 0;
+	while ((str1[i] != '\0' || str2[i] != '\0') && i < n)
+	{
+		if (str1[i] > str2[i])
+			return (1);
+		else if (str1[i] < str2[i])
+			return (-1);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	int		i;
+	char	*s2;
+
+	i = 0;
+	s2 = (char *)malloc((ft_strlen(s1) * sizeof(char)) + 1);
+	if (!s2)
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		s2[i] = s1[i];
+		i++;
+	}
+	s2[i] = '\0';
+	return (s2);
 }
 
 char	**freeer(char **split, int i)
@@ -149,7 +189,7 @@ char	**ft_split(char const *s, char c)
 void	prep_inp(char *str, int ind, t_data *data)
 {
 	data->cmds[ind] = ft_split(str, ' ');
-	data->j_cmds[ind] = ft_strjoin(data->cmds[ind][0], "/", 0);
+	data->j_cmds[ind] = ft_strjoin("/", data->cmds[ind][0], 0);
 }
 
 int	main(int ac, char **av, char **env)
@@ -157,25 +197,62 @@ int	main(int ac, char **av, char **env)
 	int	i;
 	t_data data;
 
+	char	*placeholder;
 	i = 0;
-	data.cmd_count = ac - 3;
-	data.j_cmds = malloc(sizeof(char *) * ac - 1);
-	data.cmds = malloc(sizeof(char **) * (ac - 1));
-	while (++i < ac - 1)
-		prep_inp(av[i], i - 1, &data);
-	i = 0;
-	int j = 1;
-	int t = 0;
-	while (data.cmds[j])
+	while (env[i])
 	{
-		t = 0;
-		printf("command: ");
-		while (data.cmds[j][t])
+		if (ft_strncmp(env[i], "PATH", 4) == 0)
+			placeholder = ft_strdup(env[i]);
+		i++;
+	}
+	if (placeholder)
+		(data.path = ft_split(placeholder, ':'), free (placeholder));
+	i = 2;
+	data.cmd_count = 0;
+	data.j_cmds = malloc(sizeof(char *) * ac - 3);
+	data.cmds = malloc(sizeof(char **) * (ac - 3));
+	while (i < ac - 1)
+	{
+		prep_inp(av[i], data.cmd_count, &data);
+		data.cmd_count++;
+		i++;
+	}
+	int j = 0;
+	// int t = 0;
+	// while (data.cmds[j])
+	// {
+	// 	t = 0;
+	// 	printf("command: ");
+	// 	while (data.cmds[j][t])
+	// 	{
+	// 		printf ("%s ", data.cmds[j][t]);
+	// 		t++;
+	// 	}
+	// 	printf("\n\n");
+	// 	j++;
+	// }
+	// i = 0;
+	// while (data.j_cmds[i])
+	// {
+	// 	printf("cmd path: %s\n", data.j_cmds[i]);
+	// 	i++;
+	// }
+	i = 0;
+	while (i < data.cmd_count)
+	{
+		j = -1;
+		data.child = fork();
+		if (data.child == 0)
 		{
-			printf ("%s ", data.cmds[j][t]);
-			t++;
+			while (data.path[++j])
+			{
+				data.cmd_path = ft_strjoin(data.path[j], data.j_cmds[i], 0);
+				if (access(data.cmd_path, F_OK) != -1)
+					if (access(data.cmd_path, X_OK) != -1)
+						execve(data.cmd_path, data.cmds[i], env);
+			}		
 		}
-		printf("\n\n");
-		j++;
+		wait(NULL);
+		i++;
 	}
 }
