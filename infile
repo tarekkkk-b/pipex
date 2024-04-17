@@ -1,0 +1,16 @@
+total 632
+drwxr-xr-x@ 15 tabadawi  2023_abu-dhabi    510 Apr 17 20:55 .
+drwxr-xr-x  12 tabadawi  2023_abu-dhabi    408 Apr  9 12:56 ..
+drwxr-xr-x  14 tabadawi  2023_abu-dhabi    476 Apr 16 19:52 .git
+-rw-r--r--@  1 tabadawi  2023_abu-dhabi      0 Apr  7 16:00 Icon
+-rwxr-xr-x   1 tabadawi  2023_abu-dhabi  50160 Apr 16 18:21 envvv
+-rw-r--r--   1 tabadawi  2023_abu-dhabi   4177 Apr 16 18:21 envvv.c
+-rwxr-xr-x   1 tabadawi  2023_abu-dhabi  49608 Apr 15 18:37 fork
+-rw-r--r--   1 tabadawi  2023_abu-dhabi   1302 Apr 15 18:37 fork.c
+-rwxrwxrwx   1 tabadawi  2023_abu-dhabi      0 Apr 17 20:56 infile
+-rw-r--r--   1 tabadawi  2023_abu-dhabi   5060 Apr 17 19:00 notes.txt
+-rwxrwxrwx   1 tabadawi  2023_abu-dhabi      0 Apr 17 20:42 outfile
+-rwxr-xr-x   1 tabadawi  2023_abu-dhabi  50336 Apr 17 20:54 pipex
+-rwxr-xr-x   1 tabadawi  2023_abu-dhabi  50336 Apr 17 20:55 r_pipex
+-rw-r--r--   1 tabadawi  2023_abu-dhabi   6409 Apr 17 20:55 r_pipex.c
+-rw-r--r--   1 tabadawi  2023_abu-dhabi   3618 Apr 15 19:07 test.c

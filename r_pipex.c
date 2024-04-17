@@ -6,13 +6,14 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 17:36:52 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/16 19:46:58 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/17 20:55:43 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <sys/wait.h>
 
 typedef struct s_data
@@ -24,6 +25,8 @@ typedef struct s_data
 	char	**j_cmds;
 	char	*cmd_path;
 	pid_t	child;
+	pid_t	lastpid;
+	int		status;
 }	t_data;
 
 typedef struct s_split
@@ -237,22 +240,89 @@ int	main(int ac, char **av, char **env)
 	// 	printf("cmd path: %s\n", data.j_cmds[i]);
 	// 	i++;
 	// }
-	i = 0;
-	while (i < data.cmd_count)
+	i = -1;
+	//0644
+	while (++i < data.cmd_count)
 	{
 		j = -1;
+		pipe(data.fd);
 		data.child = fork();
 		if (data.child == 0)
 		{
+			//duping read end first call
+			if (i == 0)
+			{
+				printf("First child\n");
+				close(data.fd[0]);
+				int fd = open(av[1], O_RDONLY);
+				if (fd == -1)
+					exit(EXIT_FAILURE);
+				// NEED CLEAMUP
+				if (dup2(fd, STDIN_FILENO) == -1)
+					exit(EXIT_FAILURE);
+				if (dup2(data.fd[1], STDOUT_FILENO) == -1)
+					exit(EXIT_FAILURE);
+				close(data.fd[1]);
+				close (fd);
+			} 
+			
+			// duping the write end
+				//last call (outfile)
+			else if (i == data.cmd_count - 1)
+			{
+				printf("Last child\n");
+				close(data.fd[0]);
+				close (data.fd[1]);
+				int fd2 = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (fd2 == -1)
+					exit(EXIT_FAILURE);
+				if (dup2(fd2, STDOUT_FILENO) == -1)
+					exit(EXIT_FAILURE);
+				close (fd2);
+			}
+			
+				//other calls
+			else
+			{
+				close(data.fd[0]);
+				if (dup2(data.fd[1], STDOUT_FILENO) == -1)
+					exit(EXIT_FAILURE);
+				close (data.fd[1]);
+			}
 			while (data.path[++j])
 			{
 				data.cmd_path = ft_strjoin(data.path[j], data.j_cmds[i], 0);
-				if (access(data.cmd_path, F_OK) != -1)
-					if (access(data.cmd_path, X_OK) != -1)
-						execve(data.cmd_path, data.cmds[i], env);
-			}		
+				if (!access(data.cmd_path, X_OK | F_OK))
+					execve(data.cmd_path, data.cmds[i], env);
+				// if (access(data.cmd_path, F_OK) != -1)
+				// 	if (access(data.cmd_path, X_OK) != -1)
+				// 		execve(data.cmd_path, data.cmds[i], env);
+			}
+			exit(1);
 		}
-		wait(NULL);
-		i++;
+		// else
+		// {
+			// duping the read end
+			// if (i > 0)
+			// {
+				close (data.fd[1]);
+				if (dup2(data.fd[0], STDIN_FILENO) == -1)
+					fprintf(stderr, "Parent duping\n");
+				close (data.fd[0]);
+			// }
+			// else 
+			// 	(close (data.fd[0]), close (data.fd[1]));
+			
+			data.lastpid = data.child;
+		// }
 	}
+	pid_t	dead = 0;
+	int		temp;
+	while (dead != -1)
+	{
+		dead = wait(&temp);
+		if (dead == data.lastpid)
+			data.status = WEXITSTATUS(temp); 
+	}
+	exit(data.status);
 }
