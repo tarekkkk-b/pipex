@@ -1,79 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/14 14:59:12 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/15 19:07:08 by tabadawi         ###   ########.fr       */
+/*   Created: 2023/11/17 17:19:13 by tabadawi          #+#    #+#             */
+/*   Updated: 2024/02/01 12:32:47 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/wait.h>
-#include <string.h>
-
-typedef struct s_split
-{
-	int		i;
-	char	**split;
-	int		wordcount;
-}	t_split;
-
-int	ft_strlen(const char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i] != '\0')
-		i++;
-	return (i);
-}
-
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	x;
-
-	x = ft_strlen(src);
-	i = 0;
-	if (size != 0)
-	{
-		while (src[i] != '\0' && (i < size - 1))
-		{
-			dest[i] = src[i];
-			i++;
-		}
-		dest[i] = '\0';
-	}
-	return (x);
-}
-
-size_t	ft_strlcat(char *dest, const char *src, size_t dstsize)
-{
-	size_t	s;
-	size_t	t;
-	size_t	destl;
-	size_t	srcl;
-
-	s = 0;
-	t = 0;
-	while (dest[t] != '\0')
-		t++;
-	destl = t;
-	srcl = ft_strlen(src);
-	if (dstsize == 0 || dstsize <= destl)
-		return (srcl + dstsize);
-	while (src[s] != '\0' && s < dstsize - destl - 1)
-		dest[t++] = src[s++];
-	dest[t] = '\0';
-	return (destl + srcl);
-}
+#include "libft.h"
 
 char	**freeer(char **split, int i)
 {
@@ -152,43 +89,4 @@ char	**ft_split(char const *s, char c)
 	}
 	var.split[var.i] = (NULL);
 	return (var.split);
-}
-
-int main(int ac, char **av, char **env)
-{
-	if (ac != 5)
-		exit (1);
-	char **cmd1;
-	char **cmd2;
-
-	cmd1  = ft_split(av[2], ' ');
-
-	cmd2  = ft_split(av[3], ' ');
-	
-	char	test1[ft_strlen(cmd1[0]) + ft_strlen("/") + 1];
-	ft_strlcpy(test1, "/", 2);
-	ft_strlcat(test1, cmd1[0], 10);
-	
-	char	test2[ft_strlen(cmd2[0]) + ft_strlen("/") + 1];
-	ft_strlcpy(test2, "/", 2);
-	ft_strlcat(test2, cmd2[0], 10);
-
-	printf("%s\n\n", test1);
-	printf("%s\n\n", test2);
-
-	printf("\n\n\n");
-
-	int i  = 0;
-	while (cmd1[i])
-	{
-		printf("%s\n\n", cmd1[i]);
-		i++;
-	}
-	printf("\n\n\n");
-	i  = 0;
-	while (cmd2[i])
-	{
-		printf("%s\n\n", cmd2[i]);
-		i++;
-	}
 }
