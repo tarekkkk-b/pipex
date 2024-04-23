@@ -6,7 +6,7 @@
 #    By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/19 16:39:10 by tabadawi          #+#    #+#              #
-#    Updated: 2024/04/22 21:24:30 by tabadawi         ###   ########.fr        #
+#    Updated: 2024/04/23 21:52:13 by tabadawi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,11 @@ NAME = pipex
 
 LIBFT = ./libft/libft.a
 
-SRCS = main.c duping.c pipex.c
+SRCS = pipex.c duping.c utils.c error_handling.c
 
 CC = cc
+
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
 
 OBJ = $(SRCS:.c=.o)
 
@@ -29,7 +31,7 @@ $(LIBFT):
 	@$(MAKE)	-C libft
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(CC) $(LIBFT) $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) $(LIBFT) $(OBJ) -o $(NAME)
 
 clean :
 	@rm -rf $(OBJ)

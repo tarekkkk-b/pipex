@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:40:39 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/22 21:28:10 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/23 21:13:12 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,12 @@ void	first_call(char **av, t_data *data);
 void	middle_call(t_data *data);
 void	last_call(char **av, int ac, t_data *data);
 void	parent_dup(t_data *data);
-void	prep_inp(char *str, int ind, t_data *data, int ac);
+void	prep_inp(char **av, t_data *data, int ac);
 void	getting_cmds(char **av, int ac, char **env, t_data *data);
 void	loop(char **av, int ac, char **env, t_data *data);
 void	execution(int i, char **env, t_data *data);
 void	death(t_data *data);
+void	disappointment(t_data *data, int *fd, int flag);
+void	cleaning(t_data *data);
 
 #endif
