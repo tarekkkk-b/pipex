@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:40:39 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/23 21:13:12 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/24 13:23:10 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ typedef struct s_data
 	char	**j_cmds;
 	char	*cmd_path;
 	char	*placeholder;
+	char	*limiter;
 	pid_t	child;
 	pid_t	lastpid;
+	int		heredocflag;
 }	t_data;
 
 void	first_call(char **av, t_data *data);
@@ -45,5 +47,6 @@ void	execution(int i, char **env, t_data *data);
 void	death(t_data *data);
 void	disappointment(t_data *data, int *fd, int flag);
 void	cleaning(t_data *data);
+void	heredoc(t_data *data);
 
 #endif

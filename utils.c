@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:03:40 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/23 21:48:33 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/24 13:26:10 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	prep_inp(char **av, t_data *data, int ac)
 	int	i;
 	int	j;
 
-	i = 1;
+	i = 1 + data->heredocflag;
 	j = 0;
 	while (++i < ac - 1)
 	{
@@ -25,6 +25,8 @@ void	prep_inp(char **av, t_data *data, int ac)
 		data->j_cmds[j] = ft_strjoin("/", data->cmds[j][0], 0);
 		j++;
 	}
+	data->j_cmds[j] = NULL;
+	data->cmds[j] = NULL;
 }
 
 void	getting_cmds(char **av, int ac, char **env, t_data *data)
@@ -43,9 +45,9 @@ void	getting_cmds(char **av, int ac, char **env, t_data *data)
 		data->path = ft_split(data->placeholder, ':');
 		free(data->placeholder);
 		data->placeholder = NULL;
-		data->j_cmds = malloc(sizeof(char *) * data->cmd_count);
+		data->j_cmds = malloc(sizeof(char *) * (data->cmd_count + 1));
 	}
-	data->cmds = malloc(sizeof(char **) * (data->cmd_count));
+	data->cmds = malloc(sizeof(char **) * (data->cmd_count + 1));
 	prep_inp(av, data, ac);
 }
 
@@ -60,7 +62,9 @@ void	loop(char **av, int ac, char **env, t_data *data)
 		data->child = fork();
 		if (data->child == 0)
 		{
-			if (i == 0)
+			if (i == 0 && data->heredocflag == 1)
+				heredoc(data);
+			else if (i == 0 && data->heredocflag == 0)
 				first_call(av, data);
 			else if (i == data->cmd_count - 1)
 				last_call(av, ac, data);
