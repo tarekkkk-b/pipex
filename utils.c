@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:03:40 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/24 13:26:10 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/25 14:38:17 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,20 +59,22 @@ void	loop(char **av, int ac, char **env, t_data *data)
 	while (++i < data->cmd_count)
 	{
 		pipe(data->fd);
+		if (i == 0 && data->heredocflag == 1)
+			heredoc(data);
 		data->child = fork();
 		if (data->child == 0)
 		{
-			if (i == 0 && data->heredocflag == 1)
-				heredoc(data);
-			else if (i == 0 && data->heredocflag == 0)
+			if (i == 0 && data->heredocflag == 0)
 				first_call(av, data);
 			else if (i == data->cmd_count - 1)
 				last_call(av, ac, data);
+			// else if ((data->heredocflag == 1 && i != 0) || !data->heredocflag)
 			else
 				middle_call(data);
 			execution(i, env, data);
 		}
-		parent_dup(data);
+		if ((data->heredocflag && i != 0) || data->heredocflag)
+			parent_dup(data);
 		data->lastpid = data->child;
 	}
 }
@@ -82,6 +84,7 @@ void	execution(int i, char **env, t_data *data)
 	int	j;
 
 	j = -1;
+	fprintf(stderr, "%s\n", data->cmds[i][0]);
 	if (!access(data->cmds[i][0], X_OK | F_OK))
 		execve(data->cmds[i][0], data->cmds[i], env);
 	if (data->path)

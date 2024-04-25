@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:40:23 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/24 13:16:57 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/25 13:56:27 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	initialize(int ac, t_data *data)
 	data->j_cmds = NULL;
 	data->cmds = NULL;
 	data->cmd_path = NULL;
+	data->heredocflag = 0;
 }
 
 int	main(int ac, char **av, char **env)
