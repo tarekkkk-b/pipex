@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:45:20 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/25 14:36:38 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/26 13:37:09 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void	heredoc_child(t_data *data)
 	data->fd[0] = -1;
 	write(1, "> ", 2);
 	str = get_next_line(0);
-	while (str && (ft_strncmp(str, data->limiter, ft_strlen(str) - 1) != 0)
-		&& (str[ft_strlen(str) - 1] == '\n'))
+	while (str && (ft_strncmp(str, data->limiter, ft_strlen(str) - 1) != 0))
 	{
 		write(1, "> ", 2);
 		ft_putstr_fd(str, data->fd[1]);
