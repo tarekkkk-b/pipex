@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 20:30:05 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/19 17:26:03 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/29 18:41:55 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strjoin(char *input, char *argv, int flag)
 	while (input && input[i])
 		str[j++] = input[i++];
 	i = 0;
-	while (argv[i] && argv[i] != '\n')
+	while (argv[i])
 		str[j++] = argv[i++];
 	str[j] = '\0';
 	if (flag == 1)

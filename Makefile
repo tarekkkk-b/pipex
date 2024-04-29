@@ -6,7 +6,7 @@
 #    By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/19 16:39:10 by tabadawi          #+#    #+#              #
-#    Updated: 2024/04/25 13:48:35 by tabadawi         ###   ########.fr        #
+#    Updated: 2024/04/29 21:22:48 by tabadawi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ BONUS_SRCS = pipex_bonus.c heredoc.c duping.c utils.c error_handling.c
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g3
+CFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g3
 
 OBJ = $(SRCS:.c=.o)
 
@@ -35,10 +35,10 @@ $(LIBFT):
 	@$(MAKE)	-C libft
 
 $(NAME): $(LIBFT) $(OBJ)
-	@$(CC) $(CFLAGS) $(LIBFT) $(OBJ) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
 
 bonus : $(LIBFT) $(BONUS_OBJS)
-	$(CC) $(CFLAGS) $(LIBFT) $(BONUS_OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(BONUS_OBJS) $(LIBFT) -o $(NAME)
 
 clean :
 	@rm -rf $(OBJ)
@@ -47,6 +47,8 @@ clean :
 
 fclean : clean
 	@rm -rf $(NAME)
-	@rm -rf $(LIBFT)
+	@$(MAKE)	-C libft fclean
 
 re : fclean all
+
+.PHONY	:	all bonus re clean fclean

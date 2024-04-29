@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:40:23 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/25 13:56:27 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/29 21:32:24 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ int	main(int ac, char **av, char **env)
 	getting_cmds(av, ac, env, &data);
 	loop(av, ac, env, &data);
 	death(&data);
+	cleaning(&data);
 	exit(data.status);
 }

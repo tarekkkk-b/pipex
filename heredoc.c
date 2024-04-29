@@ -6,11 +6,36 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:45:20 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/26 13:37:09 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/29 18:43:43 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+int		ft_strcmp(char *str1, char *str2)
+{
+	int	i;
+
+	if (!str1 || !str2)
+		return (1);
+	i = -1;
+	if (ft_strlen(str1) == ft_strlen(str2))
+	{	
+		while (str1[++i])
+			if (str1[i] != str2[i])
+				return (1);
+	}
+	else
+		return (1);
+	return (0);
+}
+
+void	call_heredoc(t_data *data, int *i)
+{
+	heredoc(data);
+	*i = -1;
+	data->heredocflag = -1;
+}
 
 void	heredoc_child(t_data *data)
 {
@@ -20,7 +45,7 @@ void	heredoc_child(t_data *data)
 	data->fd[0] = -1;
 	write(1, "> ", 2);
 	str = get_next_line(0);
-	while (str && (ft_strncmp(str, data->limiter, ft_strlen(str) - 1) != 0))
+	while (str && (ft_strcmp(str, data->limiter) != 0))
 	{
 		write(1, "> ", 2);
 		ft_putstr_fd(str, data->fd[1]);
@@ -41,7 +66,10 @@ void	heredoc_parent(t_data *data, pid_t child)
 	close (data->fd[1]);
 	data->fd[1] = -1;
 	if (dup2(data->fd[0], STDIN_FILENO) == -1)
-		(ft_putstr_fd("duping failed\n", 2), disappointment(data, NULL, 0), exit(1));
+	{
+		ft_putstr_fd("duping failed\n", 2);
+		(disappointment(data, NULL, 0), exit(1));
+	}
 	close (data->fd[0]);
 	data->fd[0] = -1;
 }

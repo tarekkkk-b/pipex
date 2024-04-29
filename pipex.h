@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 16:40:39 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/24 13:23:10 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/29 19:20:40 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ void	death(t_data *data);
 void	disappointment(t_data *data, int *fd, int flag);
 void	cleaning(t_data *data);
 void	heredoc(t_data *data);
+void	call_heredoc(t_data *data, int *i);
+int		ft_strcmp(char *str1, char *str2);
 
 #endif
