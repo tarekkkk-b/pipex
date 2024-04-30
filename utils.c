@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:03:40 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/29 21:38:01 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:19:03 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	getting_cmds(char **av, int ac, char **env, t_data *data)
 	if (data->placeholder)
 	{
 		data->path = ft_split(data->placeholder, ':');
+		data->path[0] = ft_strtrim(data->path[0], "PATH=");
 		free(data->placeholder);
 		data->placeholder = NULL;
 		data->j_cmds = malloc(sizeof(char *) * (data->cmd_count + 1));

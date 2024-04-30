@@ -6,13 +6,13 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 12:45:20 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/29 18:43:43 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:16:34 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int		ft_strcmp(char *str1, char *str2)
+int	ft_strcmp(char *str1, char *str2)
 {
 	int	i;
 
@@ -20,7 +20,7 @@ int		ft_strcmp(char *str1, char *str2)
 		return (1);
 	i = -1;
 	if (ft_strlen(str1) == ft_strlen(str2))
-	{	
+	{
 		while (str1[++i])
 			if (str1[i] != str2[i])
 				return (1);
@@ -57,6 +57,8 @@ void	heredoc_child(t_data *data)
 	free (str);
 	if (data->limiter)
 		free (data->limiter);
+	data->limiter = NULL;
+	cleaning(data);
 	exit(EXIT_SUCCESS);
 }
 

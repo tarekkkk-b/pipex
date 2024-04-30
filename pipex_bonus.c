@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:05:33 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/29 19:40:31 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:16:52 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	main(int ac, char **av, char **env)
 {
 	t_data	data;
 
-
 	initialize(ac, &data);
 	if (ac < 5 && ft_strncmp(av[1], "here_doc", ft_strlen(av[1])) != 0)
 	{
@@ -39,7 +38,7 @@ int	main(int ac, char **av, char **env)
 	{
 		if (ac < 6)
 		{
-			write(2, "Usage: ./pipex here_doc LIMITER ", 33); 
+			write(2, "Usage: ./pipex here_doc LIMITER ", 33);
 			(write (2, "cmd1 cmd2 ... cmdN outfile\n", 27), exit(1));
 		}
 		data.heredocflag = 1;

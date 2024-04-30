@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:31:03 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/04/24 12:43:08 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:14:56 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	cleaning(t_data *data)
 		freeing(data->path);
 	if (data->cmd_path)
 		free (data->cmd_path);
+	if (data->limiter)
+		free (data->limiter);
 	if (data->cmds)
 	{
 		i = -1;

@@ -6,7 +6,7 @@
 /*   By: tabadawi <tabadawi@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 11:22:31 by tabadawi          #+#    #+#             */
-/*   Updated: 2024/03/17 11:22:53 by tabadawi         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:12:45 by tabadawi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ static char	*ft_save(char *save)
 		buff[j++] = save[i++];
 	buff[j] = '\0';
 	free(save);
-	return (buff);
+	free (buff);
+	return (NULL);
 }
 
 static char	*gnl_strjoin(char *sv, char *buff)
